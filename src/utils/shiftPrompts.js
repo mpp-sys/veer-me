@@ -72,6 +72,15 @@ Respond with a brief, empathetic message (2-3 sentences max, under 80 words) tha
 Do not ask any question yet — just respond with warmth and brief acknowledgment.`;
 }
 
+// Detect if profile answers are clearly nonsensical / joke inputs
+export function isNonsensicalProfile(userProfile) {
+  const fields = [userProfile.role, userProfile.strength, userProfile.energiser, userProfile.worry];
+  // Flag if any field is very short (< 5 chars) or if 2+ fields are single words under 6 chars
+  const tooShort = fields.filter(f => f && f.trim().length < 5).length > 0;
+  const singleShortWords = fields.filter(f => f && f.trim().split(/\s+/).length === 1 && f.trim().length < 8).length;
+  return tooShort || singleShortWords >= 2;
+}
+
 // Prompt for the ShiftIntro screen — personalised first coaching message
 export function buildIntroMessagePrompt(userProfile) {
   const situationLabel = {
@@ -94,6 +103,13 @@ export function buildIntroMessagePrompt(userProfile) {
 - What energises them: ${userProfile.energiser}
 - What they're worried about: ${userProfile.worry}
 
+FIRST — assess whether these answers are genuine career reflections or clearly joke / nonsensical inputs (e.g. random food items, single unrelated words, gibberish, or answers that have nothing to do with work or career).
+
+IF the answers appear to be jokes or not genuine:
+Respond ONLY with this message (do not coach, do not engage with the joke answers):
+"I can see you're here to have a bit of fun — and that's okay. Fun matters. But Shift works best when you're ready to be honest with yourself. Come back when you're ready to take your reinvention seriously. I'll be here."
+
+IF the answers are genuine:
 Write a personalised first coaching message (under 150 words) that:
 1. Acknowledges 1-2 specific things from what they shared (use their actual words)
 2. Names one concrete strength you noticed from their profile

@@ -3,22 +3,24 @@ import ProgressBar from './shared/ProgressBar.jsx';
 import Button from './shared/Button.jsx';
 import { useUser } from '../context/UserContext.jsx';
 import { callShift } from '../hooks/useShift.js';
-import { buildIntroMessagePrompt } from '../utils/shiftPrompts.js';
+import { buildIntroMessagePrompt, isNonsensicalProfile } from '../utils/shiftPrompts.js';
+
+const NONSENSE_MESSAGE = `I can see you're here to have a bit of fun — and that's okay. Fun matters.
+
+But Shift works best when you're ready to be honest with yourself.
+
+Come back when you're ready to take your reinvention seriously. I'll be here.`;
 
 const FALLBACK_INTRO = (profile) => {
-  const role = profile.role || 'your current role';
-  const strength = profile.strength || 'your abilities';
-  const worry = profile.worry || 'the unknown';
+  if (isNonsensicalProfile(profile)) return NONSENSE_MESSAGE;
 
   return `I've read what you shared, and I want to acknowledge something: you came here with honesty. That matters.
 
-You described ${role} — and the strength you named, ${strength}, is exactly the kind of human capability that AI can amplify, not replace.
-
-The worry about ${worry} is real. But here's the reframe: the fact you're naming it means you're already in a position of agency, not just reaction.
+What you're navigating — the uncertainty, the pressure to adapt — is real. And the fact that you're here means you're already choosing agency over paralysis.
 
 You're not behind. You're at the beginning of something deliberate.
 
-What would it mean for you if, in six months, you were known for something *new* — something that didn't exist in your career before?`;
+What would it mean for you if, in six months, you were known for something new — something that didn't exist in your career before?`;
 };
 
 export default function ShiftIntro({ onNext }) {

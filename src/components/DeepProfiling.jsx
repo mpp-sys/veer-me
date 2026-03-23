@@ -46,7 +46,7 @@ export default function DeepProfiling({ onNext }) {
     return () => clearTimeout(timer);
   }, []);
 
-  const isComplete = Object.values(form).every(v => v.trim().length > 0);
+  const isComplete = Object.values(form).every(v => v.trim().length >= 5);
 
   const handleChange = (key, value) => {
     setForm(prev => ({ ...prev, [key]: value }));
@@ -143,7 +143,7 @@ export default function DeepProfiling({ onNext }) {
           </Button>
           {!isComplete && (
             <p className="text-center text-mair-secondary/50 text-xs mt-3">
-              Please answer all 4 questions to continue
+              Please answer all 4 questions honestly to continue
             </p>
           )}
         </div>
